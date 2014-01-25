@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class CrowdeeMovement : MonoBehaviour {
+	// 	TODO-DG: Fix me!
 
 	enum CrowdeeState { idle, walk	}
 
@@ -51,7 +52,6 @@ public class CrowdeeMovement : MonoBehaviour {
 	}
 
 	void HandleMovement() {
-	
 
 		// The Speed animator parameter is set to the absolute value of the horizontal input.
 		//anim.SetFloat("Speed", Mathf.Abs(h));
