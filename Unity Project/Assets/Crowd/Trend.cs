@@ -45,7 +45,7 @@ public class Trend : MonoBehaviour
       {Hat.Top, transform.Find("TopHat").gameObject},
     };
   }
-
+  
 	// Use this for initialization
 	protected virtual void Start()
   {
