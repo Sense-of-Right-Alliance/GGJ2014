@@ -2,9 +2,7 @@
 using System.Collections;
 
 public class CrowdeeMovement : MonoBehaviour {
-	// 	TODO-DG: Fix Me! Pshh, it's totally great now. We're done here.... 
-  //  except they walk off the screen and are wierd. Run it and see!
-
+	
 	enum CrowdeeState { idle, walk	}
 
 	private CrowdeeState state;
@@ -33,8 +31,12 @@ public class CrowdeeMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		state = CrowdeeState.idle;
 		timer = Random.Range (min_wait, max_wait);
+		if (Random.value <= 0.5f) {
+			Walk ();
+		} else {
+			state = CrowdeeState.idle;
+		}
 	}
 	
 	// Update is called once per frame
@@ -77,10 +79,9 @@ public class CrowdeeMovement : MonoBehaviour {
 	}
 
 	void Walk() {
-		// TODO-DG: HARDCODED WIDTH/HEIGHTS BECAUSE WHY IS THE SCREEN WIDTH 1000?
+		// DG: HARDCODED WIDTH/HEIGHTS BECAUSE WHY IS THE SCREEN WIDTH 1000?
 		if (this.transform.position.x >= X_BOUND) {
 			horiz = Random.value * -1.0f;
-		// TODO-DG: Test values to ensure idea is working. fix me.
 		} else if (this.transform.position.x <= -X_BOUND) {
 			horiz = Random.value * 10.0f;
 		} else {
