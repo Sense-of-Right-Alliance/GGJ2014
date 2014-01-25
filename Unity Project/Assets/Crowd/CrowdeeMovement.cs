@@ -20,6 +20,14 @@ public class CrowdeeMovement : MonoBehaviour {
 	public float moveForce = 1f;			// Amount of force added to move the player left and right.
 	public float maxSpeed = 0.05f;				// The fastest
 
+  private Animator anim;          // Reference to the player's animator component.
+
+  void Awake()
+  {
+    // Setting up references.
+    anim = GetComponent<Animator>();
+  }
+
 	// Use this for initialization
 	void Start () {
 		state = CrowdeeState.idle;
@@ -59,6 +67,9 @@ public class CrowdeeMovement : MonoBehaviour {
     if (Mathf.Abs (rigidbody2D.velocity.magnitude) > maxSpeed) {
       rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, Mathf.Sign (rigidbody2D.velocity.y) * maxSpeed);
     }
+
+    anim.SetFloat("Speed", Mathf.Abs(new Vector2(horiz,vert).magnitude));
+
 	}
 
 	void Walk() {
