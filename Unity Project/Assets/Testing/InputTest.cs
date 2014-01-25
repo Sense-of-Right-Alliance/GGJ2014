@@ -3,8 +3,8 @@ using System.Collections;
 
 public class InputTest : MonoBehaviour {
 
-	public float moveForce = 365f;			// Amount of force added to move the player left and right.
-	public float maxSpeed = 5f;				// The fastest 
+	public float moveForce = 150f;			// Amount of force added to move the player left and right.
+	public float maxSpeed = 1f;				// The fastest 
 
 	// Use this for initialization
 	void Start () {
