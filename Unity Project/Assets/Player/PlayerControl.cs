@@ -1,20 +1,22 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class PlayerControl : MonoBehaviour {
-	
+public class PlayerControl : MonoBehaviour
+{
 	public float moveForce = 500f;			// Amount of force added to move the player left and right.
 	public float maxSpeed = 1f;				// The fastest 
 
-	public int id = 1;
+	public int id = 1; // identity of the player (assigned 1 through 4)
 
   private Animator anim;          // Reference to the player's animator component.
 
-  private string Input_Horizontal, Input_Vertical, Input_A, Input_B, Input_X, Input_Y, Input_Trigger;
-
-
+  // types of controller input (names should those in Input Manager)
+  private enum ControllerInput { Horizontal, Vertical, A, B, X, Y, Trigger }
+  // association between a controller input type and the name assigned to it in the Input Manager
+  private Dictionary<ControllerInput, string> InputName;
 
   void Awake()
   {
@@ -23,45 +25,47 @@ public class PlayerControl : MonoBehaviour {
   }
 
 	// Use this for initialization
-	void Start () {
-		GetAxes ();
-	}
-
-	void GetAxes() {
-    Input_Horizontal = "P" + id.ToString () + "_Horizontal";
-    Input_Vertical = "P" + id.ToString () + "_Vertical";
-    Input_A = "P" + id.ToString () + "_A";
-    Input_B = "P" + id.ToString () + "_B";
-    Input_X = "P" + id.ToString () + "_X";
-    Input_Y = "P" + id.ToString () + "_Y";
-    Input_Trigger = "P" + id.ToString () + "_Trigger";
-	}
+  void Start()
+  {
+    // associate input names
+    InputName = new Dictionary<ControllerInput, string>();
+    foreach (var input in Enum.GetValues(typeof(ControllerInput)).Cast<ControllerInput>())
+      InputName.Add(input, FormatInputName(input));
+  }
+  
+  // uses our standardized formatting to return the name for a given input type
+  string FormatInputName(ControllerInput inputType)
+  {
+    return "P" + id.ToString() + "_" + inputType.ToString();
+  }
 	
 	// Update is called once per frame
-	void Update () {
-    if (Input.GetButtonDown(Input_A))
+	void Update()
+  {
+    if (Input.GetButtonDown(InputName[ControllerInput.A]))
     {
-      Debug.Log("A" + " " + Input_A);
-      GetComponent<PlayerTrend>().ChangeHat(Hat.Pope);
+      GetComponent<PlayerTrend>().TryChangeHat(Hat.Pope);
     }
-    if (Input.GetButtonDown(Input_B))
+    
+    if (Input.GetButtonDown(InputName[ControllerInput.B]))
     {
-      GetComponent<PlayerTrend>().ChangeHat(Hat.Bowler);
+      GetComponent<PlayerTrend>().TryChangeHat(Hat.Bowler);
     }
-    if (Input.GetButtonDown(Input_X))
+    
+    if (Input.GetButtonDown(InputName[ControllerInput.X]))
     {
-      GetComponent<PlayerTrend>().ChangeHat(Hat.Top);
+      GetComponent<PlayerTrend>().TryChangeHat(Hat.Top);
     }
   }
   
 	// Fixed update for ensure physics stuff happens only once per frame.
-	void FixedUpdate () {
-    float h = Input.GetAxis(Input_Horizontal);
+	void FixedUpdate()
+  {
+    float h = Input.GetAxis(InputName[ControllerInput.Horizontal]);
 
-    float v = -Input.GetAxis(Input_Vertical);
+    float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
 
 		rigidbody2D.AddForce(new Vector2(h * moveForce * Time.deltaTime,
-                                     
                                      v * moveForce * Time.deltaTime));
 
     float currSpeed = new Vector2(h, v).magnitude;
