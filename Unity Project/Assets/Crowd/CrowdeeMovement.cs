@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class CrowdeeMovement : MonoBehaviour {
-	// 	TODO-DG: Fix me!
+	// 	TODO-DG: Fix Me! Pshh, it's totally great now. We're done here.... 
+  //  except they walk off the screen and are wierd. Run it and see!
 
 	enum CrowdeeState { idle, walk	}
 
@@ -52,38 +53,12 @@ public class CrowdeeMovement : MonoBehaviour {
 	}
 
 	void HandleMovement() {
+    // Move the player via their rigidbody.
+    rigidbody2D.AddForce(new Vector2(horiz * moveForce * Time.deltaTime, vert * moveForce * Time.deltaTime));
 
-		// The Speed animator parameter is set to the absolute value of the horizontal input.
-		//anim.SetFloat("Speed", Mathf.Abs(h));
-		
-		// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-		/*if(horiz * rigidbody2D.velocity.x < maxSpeed)
-			// ... add a force to the player. 
-			rigidbody2D.AddForce(Vector2.right * horiz * moveForce);
-		
-		// If the player's horizontal velocity is greater than the maxSpeed...
-		if (Mathf.Abs (rigidbody2D.velocity.x) > maxSpeed) {
-
-			//Debug.Log ("Max Speed reached: " + maxSpeed);
-			// ... set the playe	r's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
-		}*/
-
-		// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-		if(vert * rigidbody2D.velocity.y < maxSpeed)
-
-			// ... add a force to the player. 
-			rigidbody2D.AddForce(new Vector2(0.0f,vert * moveForce));
-		
-		// If the player's horizontal velocity is greater than the maxSpeed...
-		if (Mathf.Abs (rigidbody2D.velocity.y) > maxSpeed) {
-			
-			//Debug.Log ("Max Speed reached: " + maxSpeed);
-			// ... set the playe	r's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x), rigidbody2D.velocity.y * maxSpeed);
-		}
-
-
+    if (Mathf.Abs (rigidbody2D.velocity.magnitude) > maxSpeed) {
+      rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, Mathf.Sign (rigidbody2D.velocity.y) * maxSpeed);
+    }
 	}
 
 	void Walk() {
@@ -91,12 +66,9 @@ public class CrowdeeMovement : MonoBehaviour {
 		vert = Random.value * 2.0f - 1.0f;
 
 		state = CrowdeeState.walk;
-
-		Debug.Log ("Walk = " + horiz + " " + vert);
 	}
 
 	void Wait() {
-		Debug.Log ("Wait velocity = " + rigidbody2D.velocity);
 		state = CrowdeeState.idle;
 	}
 }
