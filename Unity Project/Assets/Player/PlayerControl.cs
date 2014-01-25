@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerControl : MonoBehaviour {
 	
@@ -8,7 +10,17 @@ public class PlayerControl : MonoBehaviour {
 
 	public int id = 1;
 
-	private string[] axes;
+  private Animator anim;          // Reference to the player's animator component.
+
+  private string Input_Horizontal, Input_Vertical, Input_A, Input_B, Input_X, Input_Y, Input_Trigger;
+
+
+
+  void Awake()
+  {
+    // Setting up references.
+    anim = GetComponent<Animator>();
+  }
 
 	// Use this for initialization
 	void Start () {
@@ -16,26 +28,48 @@ public class PlayerControl : MonoBehaviour {
 	}
 
 	void GetAxes() {
-		axes = new string[7];
-		axes [0] = "P" + id.ToString () + "_Horizontal";
-		axes [1] = "P" + id.ToString () + "_Vertical";
-		axes [2] = "P" + id.ToString () + "_A";
-		axes [3] = "P" + id.ToString () + "_B";
-		axes [4] = "P" + id.ToString () + "_X";
-		axes [5] = "P" + id.ToString () + "_Y";
-		axes [6] = "P" + id.ToString () + "_Trigger";
+    Input_Horizontal = "P" + id.ToString () + "_Horizontal";
+    Input_Vertical = "P" + id.ToString () + "_Vertical";
+    Input_A = "P" + id.ToString () + "_A";
+    Input_B = "P" + id.ToString () + "_B";
+    Input_X = "P" + id.ToString () + "_X";
+    Input_Y = "P" + id.ToString () + "_Y";
+    Input_Trigger = "P" + id.ToString () + "_Trigger";
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	  
-	}
-
+    if (Input.GetButtonDown(Input_A))
+    {
+      Debug.Log("A" + " " + Input_A);
+      GetComponent<PlayerTrend>().ChangeHat(Hat.Pope);
+    }
+    if (Input.GetButtonDown(Input_B))
+    {
+      GetComponent<PlayerTrend>().ChangeHat(Hat.Bowler);
+    }
+    if (Input.GetButtonDown(Input_X))
+    {
+      GetComponent<PlayerTrend>().ChangeHat(Hat.Top);
+    }
+  }
+  
 	// Fixed update for ensure physics stuff happens only once per frame.
 	void FixedUpdate () {
-		rigidbody2D.AddForce(new Vector2(Input.GetAxis(axes[0]) * moveForce * Time.deltaTime,
+    float h = Input.GetAxis(Input_Horizontal);
+
+    float v = -Input.GetAxis(Input_Vertical);
+
+		rigidbody2D.AddForce(new Vector2(h * moveForce * Time.deltaTime,
                                      
-                                     -Input.GetAxis(axes[1]) * moveForce * Time.deltaTime));
+                                     v * moveForce * Time.deltaTime));
+
+    float currSpeed = new Vector2(h, v).magnitude;
+    //Debug.Log(currSpeed);
+
+    // The Speed animator parameter is set to the absolute value of the horizontal input.
+    anim.SetFloat("Speed", Mathf.Abs(new Vector2(h,v).magnitude));
+
 		// Cache the horizontal input.
 		/*float h = Input.GetAxis(axes[0]);
 		
