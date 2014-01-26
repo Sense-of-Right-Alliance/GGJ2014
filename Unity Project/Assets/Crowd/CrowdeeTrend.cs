@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 
 public class CrowdeeTrend : Trend
@@ -13,6 +15,7 @@ public class CrowdeeTrend : Trend
   protected virtual float MinNoActionMilliseconds { get { return 2000; } } // maximum time after hat cools down before trying to use hat
   protected virtual float MaxNoActionMilliseconds { get { return 10000; } } // maximum time after hat cools down before trying to use hat
   protected Timer NoActionTimer;
+  protected IEnumerable<Hat> crowdHats = System.Enum.GetValues(typeof(Hat)).Cast<Hat>().Except(new List<Hat>(){ Hat.Dick });
   
   bool NoActionTimerElapsed, HatCooldownTimerElapsed, StartSameTrendTimer;
   
@@ -34,9 +37,9 @@ public class CrowdeeTrend : Trend
       Hat stylishHat = CurrentHat;
       if (TryNewTrend)
       {
-          stylishHat = (Hat) Random.Range(0, System.Enum.GetNames(typeof(Hat)).Length);
-          StartSpreadSameTrendTimer(Random.Range(MinSameTrendMilliseconds, MaxSameTrendMilliseconds));
-          TryNewTrend = false;
+        stylishHat = crowdHats.OrderBy(u => Random.value).First();
+        StartSpreadSameTrendTimer(Random.Range(MinSameTrendMilliseconds, MaxSameTrendMilliseconds));
+        TryNewTrend = false;
       }
       ChangeHat(stylishHat, 1.0f);
       NoActionTimerElapsed = false;
