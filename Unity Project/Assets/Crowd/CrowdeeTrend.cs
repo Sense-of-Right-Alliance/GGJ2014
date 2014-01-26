@@ -41,7 +41,7 @@ public class CrowdeeTrend : Trend
         StartSpreadSameTrendTimer(Random.Range(MinSameTrendMilliseconds, MaxSameTrendMilliseconds));
         TryNewTrend = false;
       }
-      ChangeHat(stylishHat, 1.0f);
+      ChangeHat(stylishHat, 1.0f, GetComponent<PlayerClass>(), GetComponent<PlayerClass>());
       NoActionTimerElapsed = false;
     }
     if (HatCooldownTimerElapsed)
@@ -85,12 +85,12 @@ public class CrowdeeTrend : Trend
     HatCooldownTimerElapsed = true;
   }
   
-  public override void ChangeHat(Hat newHat, float transmissionChance)
+  public override void ChangeHat(Hat newHat, float transmissionChance, PlayerClass initiator, PlayerClass self)
   {
     if (newHat != CurrentHat)
       StartSameTrendTimer = true;
     
-    base.ChangeHat(newHat, transmissionChance);
+    base.ChangeHat(newHat, transmissionChance, initiator, self);
     NoActionTimer.Stop();
   }
 }

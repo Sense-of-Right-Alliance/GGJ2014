@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +21,27 @@ public class Trend : MonoBehaviour
   protected Timer HatCooldownTimer;
   protected bool HatOnCooldown = false; // whether the hat can be used currently
   
-  protected bool TransformWaiting = false;
-  protected Hat TransformHat;
-  protected float TransformTransmission = 0.0f;
+  public bool StolenFromRecently = false;
   
-  protected bool HatWaiting = false;
-  protected Hat HatOnCall;
+  bool TransformWaiting = false;
+  Hat TransformHat;
+  float TransformTransmission = 0.0f;
+  PlayerClass TransformInitiator;
   
-  protected bool AnimTriggerWaiting = false;
-  protected string AnimTriggerString = null;
-
+  bool HatWaiting = false;
+  Hat HatOnCall;
+  
+  bool AnimTriggerWaiting = false;
+  string AnimTriggerString = null;
+  
+  bool RespondingToTrendEvent = false;
+  Hat TrendEventHat;
+  float TrendEventTransmissionRate;
+  PlayerClass TrendEventInitiator;
+  
+  bool StartingTrendEvent;
+  Hat NewTrendEventHat;
+  
   protected virtual void Awake()
   {
     // Setting up references.
@@ -63,7 +74,6 @@ public class Trend : MonoBehaviour
         case(Class.TrendSetter):
           SetCurrentHat(Hat.Top);
           break;
-
       }
     }
 
@@ -77,16 +87,14 @@ public class Trend : MonoBehaviour
 	// Update is called once per frame
   protected virtual void Update()
   {
-
     Debug.DrawLine(transform.position, transform.position + Vector3.right * 3);
     // these must be done in main thread because they access UnityEngine's renderer
     if (AnimTriggerWaiting)
     {
       Anim.SetTrigger(AnimTriggerString);
-      
       AnimTriggerWaiting = false;
     }
-
+    
     // only npcs and the trend setter can cause trends
     if (TransformWaiting && ((tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.TrendSetter) || tag != "Player"))
     {
@@ -96,18 +104,19 @@ public class Trend : MonoBehaviour
       int trendCount = 0; // for counting how many you successfully influenced (trendsetter)
       foreach (var gameObject in nearbyObjects)
       {
-        if(gameObject.tag != "Player") {
+        if (gameObject.tag != "Player") {
           var trend = gameObject.GetComponent<Trend>();
 
-          if (trend.CurrentHat != TransformHat && TransformTransmission > Random.value) {
+          if (trend.CurrentHat != TransformHat && TransformTransmission > Random.value)
+          {
             trendCount++;
-            trend.ChangeHat(TransformHat, furtherTransmissionChance);
-           
+            trend.RespondToTrendEvent(TransformHat, furtherTransmissionChance, Random.Range(100,400), TransformInitiator);
           }
         }
       }
 
-      if(tag == "Player") {
+      if (tag == "Player")
+      {
         GetComponent<PlayerClass>().HandleTrendSet(trendCount);
       }
       
@@ -116,6 +125,9 @@ public class Trend : MonoBehaviour
     
 	  if (HatWaiting)
     {
+      if (CurrentHat != HatOnCall)
+        StolenFromRecently = false;
+      
       // hide all hats
       foreach (var hatObject in HatObjects.Values)
         hatObject.renderer.enabled = false;
@@ -126,6 +138,19 @@ public class Trend : MonoBehaviour
       CurrentHat = HatOnCall;
       
       HatWaiting = false;
+    }
+    
+    if (RespondingToTrendEvent)
+    {
+      RespondingToTrendEvent = false;
+      if (CurrentHat != TrendEventHat)
+        ChangeHat(TrendEventHat, TrendEventTransmissionRate, TrendEventInitiator, GetComponent<PlayerClass>());
+    }
+    
+    if (StartingTrendEvent)
+    {
+      ChangeHat(NewTrendEventHat, 1.0f, GetComponent<PlayerClass>(), GetComponent<PlayerClass>());
+      StartingTrendEvent = false;
     }
   }
   
@@ -144,36 +169,56 @@ public class Trend : MonoBehaviour
   {
     if (CanChangeHat(newHat)) // check if the hat can be swapped
     {
-      ChangeHat(newHat, 1.0f);
+      NewTrendEventHat = newHat;
+      StartingTrendEvent = true;
     }
   }
   
-  public virtual void ChangeHat(Hat newHat, float transmissionChance)
+  public void RespondToTrendEvent(Hat newHat, float transmissionChance, float time, PlayerClass initiator)
   {
-    if (tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.Detective)
+    Timer waitTimer = new Timer(time)
+    {
+      AutoReset = false,
+    };
+    waitTimer.Elapsed += (object sender, ElapsedEventArgs e) => RespondingToTrendEvent = true;
+    waitTimer.Start();
+    
+    TrendEventHat = newHat;
+    TrendEventInitiator = initiator;
+    TrendEventTransmissionRate = transmissionChance;
+  }
+  
+  public virtual void ChangeHat(Hat newHat, float transmissionChance, PlayerClass initiator, PlayerClass self)
+  {
+    if (self != null && self.playerClass == Class.Detective)
     {
       return;
     }
-      // update the current hat
-      SetCurrentHat(newHat);
-      // display swap animation (must be done in main thread)
-      AnimTriggerString = "Hat";
-      AnimTriggerWaiting = true;
     
-      // trigger local trend
-      if (transmissionChance > 0)
-        InitiateTrend(newHat, transmissionChance);
+    if (initiator != null && initiator.playerClass == Class.TrendSetter && initiator != self)
+      initiator.score += 1;
     
-      // initiate hat cooldown
-      HatOnCooldown = true;
-      HatCooldownTimer.Start();
+    // update the current hat
+    SetCurrentHat(newHat);
+    // display swap animation (must be done in main thread)
+    AnimTriggerString = "Hat";
+    AnimTriggerWaiting = true;
+  
+    // trigger local trend
+    if (transmissionChance > 0)
+      InitiateTrend(newHat, transmissionChance, initiator);
+  
+    // initiate hat cooldown
+    HatOnCooldown = true;
+    HatCooldownTimer.Start();
   }
   
-  protected virtual void InitiateTrend(Hat trendyHat, float transmissionChance)
+  protected virtual void InitiateTrend(Hat trendyHat, float transmissionChance, PlayerClass initiator)
   {
     TransformHat = trendyHat;
     TransformTransmission = transmissionChance;
     TransformWaiting = true;
+    TransformInitiator = initiator;
   }
   
   IEnumerable<GameObject> GetObjectsInRadius(Vector3 center, float radius)
