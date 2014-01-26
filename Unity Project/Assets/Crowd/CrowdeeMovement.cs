@@ -18,8 +18,10 @@ public class CrowdeeMovement : MonoBehaviour {
 	public float moveForce = 1f;			// Amount of force added to move the player left and right.
 	public float maxSpeed = 0.05f;				// The fastest
 
-	private const float X_BOUND = 4.0f;
-	private const float Y_BOUND = 2.0f;
+	private float x_bound_pos = 9.0f;
+    private float x_bound_neg = -9.0f;
+	private float y_bound_pos = 3.0f;
+    private float y_bound_neg = -3.0f;
 
   private Animator anim;          // Reference to the player's animator component.
 
@@ -32,11 +34,26 @@ public class CrowdeeMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		timer = Random.Range (min_wait, max_wait);
-		if (Random.value <= 0.5f) {
+		float randomizer = Random.value;
+		if (randomizer <= 0.2f) {
+			x_bound_pos = 0.0f;
+            y_bound_pos = 0.0f;
 			Walk ();
-		} else {
+		} else if (randomizer <= 0.4f) {
+            x_bound_neg = 0.0f;
+            y_bound_pos = 0.0f;
 			state = CrowdeeState.idle;
-		}
+		} else if (randomizer <= 0.6f) {
+            x_bound_pos = 0.0f;
+            y_bound_neg = 0.0f;        
+            Walk ();
+		} else if (randomizer <= 0.8f) {
+            x_bound_neg = 0.0f;
+            y_bound_neg = 0.0f;
+            state = CrowdeeState.idle;
+        } else {
+            Walk ();
+        }
 	}
 	
 	// Update is called once per frame
@@ -73,28 +90,27 @@ public class CrowdeeMovement : MonoBehaviour {
 	      rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, Mathf.Sign (rigidbody2D.velocity.y) * maxSpeed);
 	    }
 		
-
 	    anim.SetFloat("Speed", Mathf.Abs(new Vector2(horiz,vert).magnitude));
 
 	}
 
 	void Walk() {
 		// DG: HARDCODED WIDTH/HEIGHTS BECAUSE WHY IS THE SCREEN WIDTH 1000?
-		if (this.transform.position.x >= X_BOUND) {
+		if (this.transform.position.x >= x_bound_pos) {
 			horiz = Random.value * -1.0f;
-		} else if (this.transform.position.x <= -X_BOUND) {
-			horiz = Random.value * 10.0f;
+		} else if (this.transform.position.x <= x_bound_neg) {
+			horiz = Random.value * 1.0f;
 		} else {
 			horiz = Random.value * 2.0f - 1.0f;	
 		}
 
-		if (this.transform.position.y >= 3.0f * Y_BOUND / 4.0f) {
+		if (this.transform.position.y >= 3.0f * y_bound_pos / 4.0f) {
 				vert = Random.value * -1.0f;
-		} else if (this.transform.position.y <= -Y_BOUND) {
+		} else if (this.transform.position.y <= y_bound_neg) {
 				vert = Random.value * 1.0f;
 		} else {
-			vert = Random.value * 2.0f - 1.0f;
-		}
+            vert = Random.value * 2.0f - 1.0f;
+        }
 
 
 		state = CrowdeeState.walk;
