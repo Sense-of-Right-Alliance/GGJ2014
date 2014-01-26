@@ -30,7 +30,7 @@ public class PlayerControl : MonoBehaviour
   {
     // Setting up references.
     anim = GetComponent<Animator>();
-    arrow = transform.Find("Arrow");
+    arrow = transform.Find("Arrow").gameObject;
   }
 
 	// Use this for initialization
@@ -72,12 +72,15 @@ public class PlayerControl : MonoBehaviour
     if (Input.GetAxis(InputName[ControllerInput.Trigger]) > 0.5f || Input.GetAxis(InputName[ControllerInput.Trigger]) < -0.5f) 
     {
        // TODO-DG: Increase Arrow opacity by tiny every update loop  
-       arrow.renderer.material.color.a += 0.01f;
+      var color = arrow.GetComponent<SpriteRenderer>().color;
+      color.a += 0.01f;
+      arrow.GetComponent<SpriteRenderer>().color = color;
     } else {
-      //  TODO-DG: Decrement it by tiny*2
-      arrow.renderer.material.color.a -= 0.02f;
+      var color = arrow.GetComponent<SpriteRenderer>().color;
+      color.a -= 0.02f;
+      arrow.GetComponent<SpriteRenderer>().color = color;
     }
-      Debug.Log(Input.GetAxis(InputName[ControllerInput.Trigger]));
+      //Debug.Log(Input.GetAxis(InputName[ControllerInput.Trigger]));
 
     if (Input.GetButtonDown(InputName[ControllerInput.A]))
     {
