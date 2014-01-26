@@ -74,6 +74,9 @@ public class Trend : MonoBehaviour
         case(Class.TrendSetter):
           SetCurrentHat(Hat.Top);
           break;
+        case(Class.BaldMan):
+          SetCurrentHat(Hat.Pope);
+          break;
       }
     }
 
@@ -104,11 +107,16 @@ public class Trend : MonoBehaviour
       int trendCount = 0; // for counting how many you successfully influenced (trendsetter)
       foreach (var gameObject in nearbyObjects)
       {
-        if (gameObject.tag != "Player") {
+        if (gameObject.tag != "Player" 
+            || (gameObject.GetComponent<PlayerClass>().playerClass == Class.BaldMan 
+            && !gameObject.GetComponent<PlayerClass>().immuneToTrends)) {
           var trend = gameObject.GetComponent<Trend>();
 
           if (trend.CurrentHat != TransformHat && TransformTransmission > Random.value)
           {
+            if (gameObject.tag == "Player"  && gameObject.GetComponent<PlayerClass>().playerClass == Class.BaldMan)
+              furtherTransmissionChance = 0;
+
             trendCount++;
             trend.RespondToTrendEvent(TransformHat, furtherTransmissionChance, Random.Range(100,400), TransformInitiator);
           }
@@ -200,6 +208,10 @@ public class Trend : MonoBehaviour
     
     // update the current hat
     SetCurrentHat(newHat);
+    if(self != null && self.playerClass == Class.BaldMan)
+    {
+      self.baldMode = false;
+    }
     // display swap animation (must be done in main thread)
     AnimTriggerString = "Hat";
     AnimTriggerWaiting = true;
@@ -228,7 +240,7 @@ public class Trend : MonoBehaviour
     //return Physics.OverlapSphere(center, radius).Select(u => u.gameObject);
   }
   
-  protected void SetCurrentHat(Hat newHat)
+  public void SetCurrentHat(Hat newHat)
   {
     // this must be done in main thread because it accesses UnityEngine's renderer
     HatOnCall = newHat;
