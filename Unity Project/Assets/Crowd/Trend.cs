@@ -5,7 +5,7 @@ using System.Linq;
 using System.Timers;
 
 // types of hats in the game
-public enum Hat { Pope, Bowler, Top, Workman }
+public enum Hat { NoHat, Pope, Bowler, Top, Workman }
 
 public class Trend : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class Trend : MonoBehaviour
   public Hat CurrentHat; // hat currently wornly by character
   
   // default hat worn by characters when the game starts
-  protected virtual Hat DefaultHat { get { return Hat.Bowler; } }
+  protected virtual Hat DefaultHat { get { return Hat.NoHat; } }
   
   // hat cooldown
   protected virtual double HatCooldownMillseconds { get { return 3000; } } // minimum time between hat uses
@@ -48,9 +48,23 @@ public class Trend : MonoBehaviour
 	protected virtual void Start()
   {
     SetCurrentHat(DefaultHat);
-    if (tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.Detective)
+    if (tag == "Player")
     {
-      SetCurrentHat(Hat.Workman);
+      switch(GetComponent<PlayerClass>().playerClass) {
+        case(Class.Detective):
+          SetCurrentHat(Hat.Workman);
+          break;
+        case(Class.PickPocket):
+          SetCurrentHat(Hat.Bowler);
+          break;
+        case(Class.RoughHouser):
+          SetCurrentHat(Hat.Pope);
+          break;
+        case(Class.TrendSetter):
+          SetCurrentHat(Hat.Top);
+          break;
+
+      }
     }
 
     HatCooldownTimer = new Timer(HatCooldownMillseconds) // timer counts down after hat has been used
@@ -107,7 +121,8 @@ public class Trend : MonoBehaviour
         hatObject.renderer.enabled = false;
       
       // display the new hat and update reference to the current hat
-      HatObjects[HatOnCall].renderer.enabled = true;
+      if(HatOnCall != Hat.NoHat) 
+        HatObjects[HatOnCall].renderer.enabled = true;
       CurrentHat = HatOnCall;
       
       HatWaiting = false;
