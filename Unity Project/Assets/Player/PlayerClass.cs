@@ -51,27 +51,30 @@ public class PlayerClass : MonoBehaviour {
   public void HandleTrendSet(int numberOfPeople) {
     if (playerClass == Class.TrendSetter)
     {
-      if (numberOfPeople > 4)
-      {
-        score += 2*numberOfPeople;
-      }
+
     }
   }
 
   // For pickPocket!!!
   // called on a collision, passing in the colliding persons hat.
-  public void HandleBump(GameObject p, Hat theirHat) {
+  public void HandleBump(GameObject gameObject, Hat bumpedHat) {
     if (playerClass == Class.PickPocket)
     {
+      var thiefTrend = GetComponent<PlayerTrend>();
+      var bumpedClass = gameObject.GetComponent<PlayerClass>();
       //Debug.Log("Is Pickpocket: " + theirHat.ToString() + " " + GetComponent<PlayerTrend>().CurrentHat.ToString());
-      if (theirHat != GetComponent<PlayerTrend>().CurrentHat
+      if (bumpedHat != thiefTrend.CurrentHat
           && rigidbody2D.velocity.magnitude > 0.05f
-          && (score >= 2 || p.tag != "Player"))
+          && (bumpedClass == null || bumpedClass.score >= 8))
       {
         Instantiate(testExplosion, transform.position, transform.rotation);
         score += 2;
-        if(p.tag == "Player") { // theif steals from other players
-          p.GetComponent<PlayerClass>().score -= 2;
+        if (bumpedClass != null) // thief steals from other players
+        {
+          var bumpedTrend = gameObject.GetComponent<PlayerTrend>();
+          bumpedTrend.StolenFromRecently = true;
+          score += 6;
+          gameObject.GetComponent<PlayerClass>().score -= 8;
         }
       }
     }
