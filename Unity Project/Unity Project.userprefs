@@ -1,12 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\PlayerClass.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Crowd\CrowdeeMovement.cs">
     <Files>
-      <File FileName="Assets\Crowd\Trend.cs" Line="102" Column="1" />
+      <File FileName="Assets\Crowd\CrowdeeMovement.cs" Line="43" Column="6" />
+      <File FileName="Assets\Crowd\Trend.cs" Line="1" Column="1" />
       <File FileName="Assets\Crowd\CrowdeeTrend.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\PlayerTrend.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\PlayerClass.cs" Line="9" Column="36" />
-      <File FileName="Assets\Interface\Interface.cs" Line="7" Column="3" />
+      <File FileName="Assets\Interface\Interface.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -65,46 +65,13 @@ public class PlayerControl : MonoBehaviour
 
     float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
 
-		rigidbody2D.AddForce(new Vector2(h * moveForce * Time.deltaTime,
-                                     v * moveForce * Time.deltaTime));
+        rigidbody2D.AddForce(new Vector2(h,v).normalized * moveForce * Time.deltaTime);
 
     float currSpeed = new Vector2(h, v).magnitude;
     //Debug.Log(currSpeed);
 
     // The Speed animator parameter is set to the absolute value of the horizontal input.
     anim.SetFloat("Speed", Mathf.Abs(new Vector2(h,v).magnitude));
-
-		// Cache the horizontal input.
-		/*float h = Input.GetAxis(axes[0]);
-		
-		// The Speed animator parameter is set to the absolute value of the horizontal input.
-		//anim.SetFloat("Speed", Mathf.Abs(h));
-		
-		// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-		if(h * rigidbody2D.velocity.x < maxSpeed)
-			// ... add a force to the player. 
-			rigidbody2D.AddForce(Vector2.right * h * moveForce);
-		
-		// If the player's horizontal velocity is greater than the maxSpeed...
-		if(Mathf.Abs(rigidbody2D.velocity.x) > maxSpeed)
-			// ... set the player's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2(Mathf.Sign(rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
-
-		// Cache the horizontal input.
-		float v = Input.GetAxis(axes[1]);
-		
-		// The Speed animator parameter is set to the absolute value of the horizontal input.
-		//anim.SetFloat("Speed", Mathf.Abs(h));
-		
-		// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-		if(v * rigidbody2D.velocity.y < maxSpeed)
-			// ... add a force to the player. 
-			rigidbody2D.AddForce(Vector2.right * v * moveForce);
-		
-		// If the player's horizontal velocity is greater than the maxSpeed...
-		if(Mathf.Abs(rigidbody2D.velocity.y) > maxSpeed)
-			// ... set the player's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2(Mathf.Sign(rigidbody2D.velocity.x), rigidbody2D.velocity.y * maxSpeed);*/
 		
 	}
 
