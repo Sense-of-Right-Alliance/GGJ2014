@@ -64,10 +64,10 @@ public class PlayerClass : MonoBehaviour {
     if (playerClass == Class.PickPocket)
     {
       //Debug.Log("Is Pickpocket: " + theirHat.ToString() + " " + GetComponent<PlayerTrend>().CurrentHat.ToString());
-      if (theirHat != GetComponent<PlayerTrend>().CurrentHat && rigidbody2D.velocity.magnitude > 0.5f)
+      if (theirHat != GetComponent<PlayerTrend>().CurrentHat && rigidbody2D.velocity.magnitude > 0.05f)
       {
         Instantiate(testExplosion, transform.position, transform.rotation);
-        score += 4;
+        score += 2;
       }
     }
   }
