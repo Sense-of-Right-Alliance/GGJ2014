@@ -30,9 +30,6 @@ public class Trend : MonoBehaviour
   
   protected bool AnimTriggerWaiting = false;
   protected string AnimTriggerString = null;
-  
-  // c# random number generated, because the unity one is !@#%ed
-  protected System.Random CSRNG = new System.Random();
 
   protected virtual void Awake()
   {
