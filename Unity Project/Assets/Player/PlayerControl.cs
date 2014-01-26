@@ -18,6 +18,8 @@ public class PlayerControl : MonoBehaviour
 
   private float tackleTimer = 0.0f;
   private bool isTackled = false;
+  
+  private GameObject arrow;
 
   // types of controller input (names should those in Input Manager)
   private enum ControllerInput { Horizontal, Vertical, A, B, X, Y, Trigger }
@@ -28,6 +30,7 @@ public class PlayerControl : MonoBehaviour
   {
     // Setting up references.
     anim = GetComponent<Animator>();
+    arrow = transform.Find("Arrow");
   }
 
 	// Use this for initialization
@@ -65,8 +68,16 @@ public class PlayerControl : MonoBehaviour
         GetComponent<PlayerTrend>().TryChangeHat(Hat.Top);
       }
     }
-
-
+    
+    if (Input.GetAxis(InputName[ControllerInput.Trigger]) > 0.5f || Input.GetAxis(InputName[ControllerInput.Trigger]) < -0.5f) 
+    {
+       // TODO-DG: Increase Arrow opacity by tiny every update loop  
+       arrow.renderer.material.color.a += 0.01f;
+    } else {
+      //  TODO-DG: Decrement it by tiny*2
+      arrow.renderer.material.color.a -= 0.02f;
+    }
+      Debug.Log(Input.GetAxis(InputName[ControllerInput.Trigger]));
 
     if (Input.GetButtonDown(InputName[ControllerInput.A]))
     {
