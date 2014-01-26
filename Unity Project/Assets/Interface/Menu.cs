@@ -7,10 +7,6 @@ public class Menu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-    players[0].GetComponent<PlayerClass>().Set(Class.TrendSetter);
-    players[1].GetComponent<PlayerClass>().Set(Class.PickPocket);
-    players[2].GetComponent<PlayerClass>().Set(Class.Detective);
-    players[3].GetComponent<PlayerClass>().Set(Class.RoughHouser);
 	}
 
 

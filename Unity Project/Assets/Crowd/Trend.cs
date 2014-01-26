@@ -5,7 +5,7 @@ using System.Linq;
 using System.Timers;
 
 // types of hats in the game
-public enum Hat { Pope, Bowler, Top, Dick }
+public enum Hat { Pope, Bowler, Top, Workman }
 
 public class Trend : MonoBehaviour
 {
@@ -40,7 +40,7 @@ public class Trend : MonoBehaviour
       {Hat.Pope, transform.Find("PopeHat").gameObject},
       {Hat.Bowler, transform.Find("BowlerHat").gameObject},
       {Hat.Top, transform.Find("TopHat").gameObject},
-      {Hat.Dick, transform.Find("DickHat").gameObject},
+      {Hat.Workman, transform.Find("DickHat").gameObject},
     };
   }
   
@@ -48,6 +48,11 @@ public class Trend : MonoBehaviour
 	protected virtual void Start()
   {
     SetCurrentHat(DefaultHat);
+    if (tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.Detective)
+    {
+      SetCurrentHat(Hat.Workman);
+    }
+
     HatCooldownTimer = new Timer(HatCooldownMillseconds) // timer counts down after hat has been used
     {
       AutoReset = false,
@@ -130,20 +135,23 @@ public class Trend : MonoBehaviour
   
   public virtual void ChangeHat(Hat newHat, float transmissionChance)
   {
-
-    // update the current hat
-    SetCurrentHat(newHat);
-    // display swap animation (must be done in main thread)
-    AnimTriggerString = "Hat";
-    AnimTriggerWaiting = true;
+    if (tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.Detective)
+    {
+      return;
+    }
+      // update the current hat
+      SetCurrentHat(newHat);
+      // display swap animation (must be done in main thread)
+      AnimTriggerString = "Hat";
+      AnimTriggerWaiting = true;
     
-    // trigger local trend
-    if (transmissionChance > 0)
-      InitiateTrend(newHat, transmissionChance);
+      // trigger local trend
+      if (transmissionChance > 0)
+        InitiateTrend(newHat, transmissionChance);
     
-    // initiate hat cooldown
-    HatOnCooldown = true;
-    HatCooldownTimer.Start();
+      // initiate hat cooldown
+      HatOnCooldown = true;
+      HatCooldownTimer.Start();
   }
   
   protected virtual void InitiateTrend(Hat trendyHat, float transmissionChance)

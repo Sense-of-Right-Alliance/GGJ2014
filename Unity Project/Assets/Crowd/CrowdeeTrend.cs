@@ -15,7 +15,7 @@ public class CrowdeeTrend : Trend
   protected virtual float MinNoActionMilliseconds { get { return 2000; } } // maximum time after hat cools down before trying to use hat
   protected virtual float MaxNoActionMilliseconds { get { return 10000; } } // maximum time after hat cools down before trying to use hat
   protected Timer NoActionTimer;
-  protected IEnumerable<Hat> crowdHats = System.Enum.GetValues(typeof(Hat)).Cast<Hat>().Except(new List<Hat>(){ Hat.Dick });
+  protected IEnumerable<Hat> crowdHats = System.Enum.GetValues(typeof(Hat)).Cast<Hat>().Except(new List<Hat>(){ Hat.Workman });
   
   bool NoActionTimerElapsed, HatCooldownTimerElapsed, StartSameTrendTimer;
   
