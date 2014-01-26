@@ -88,7 +88,7 @@ public class CrowdeeMovement : MonoBehaviour {
 			horiz = Random.value * 2.0f - 1.0f;	
 		}
 
-		if (this.transform.position.y >= Y_BOUND) {
+		if (this.transform.position.y >= 3.0f * Y_BOUND / 4.0f) {
 				vert = Random.value * -1.0f;
 		} else if (this.transform.position.y <= -Y_BOUND) {
 				vert = Random.value * 1.0f;

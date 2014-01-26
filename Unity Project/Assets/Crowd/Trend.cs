@@ -11,7 +11,7 @@ public class Trend : MonoBehaviour
 {
   private Animator Anim; // Reference to the player's animator component.
   protected Dictionary<Hat,GameObject> HatObjects; // collection of our hat game objects
-  protected Hat CurrentHat; // hat currently wornly by character
+  public Hat CurrentHat; // hat currently wornly by character
   
   // default hat worn by characters when the game starts
   protected virtual Hat DefaultHat { get { return Hat.Bowler; } }
@@ -60,6 +60,8 @@ public class Trend : MonoBehaviour
 	// Update is called once per frame
   protected virtual void Update()
   {
+
+    Debug.DrawLine(transform.position, transform.position + Vector3.right * 3);
     // these must be done in main thread because they access UnityEngine's renderer
     if (AnimTriggerWaiting)
     {
@@ -67,17 +69,29 @@ public class Trend : MonoBehaviour
       
       AnimTriggerWaiting = false;
     }
-    
-    if (TransformWaiting)
+
+    // only npcs and the trend setter can cause trends
+    if (TransformWaiting && ((tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.TrendSetter) || tag != "Player"))
     {
+      //Debug.Log(TransformTransmission);
       var furtherTransmissionChance = TransformTransmission * 0.5f - 0.05f;
-      
-      var nearbyObjects = GetObjectsInRadius(transform.position, 20);
+      var nearbyObjects = GetObjectsInRadius(transform.position, 1);
+      int trendCount = 0; // for counting how many you successfully influenced (trendsetter)
       foreach (var gameObject in nearbyObjects)
       {
-        var trend = gameObject.GetComponent<Trend>();
-        if (TransformTransmission > Random.value)
-          trend.ChangeHat(TransformHat, furtherTransmissionChance);
+        if(gameObject.tag != "Player") {
+          var trend = gameObject.GetComponent<Trend>();
+
+          if (TransformTransmission > Random.value) {
+            trendCount++;
+            trend.ChangeHat(TransformHat, furtherTransmissionChance);
+           
+          }
+        }
+      }
+
+      if(tag == "Player") {
+        GetComponent<PlayerClass>().HandleTrendSet(trendCount);
       }
       
       TransformWaiting = false;
@@ -118,6 +132,7 @@ public class Trend : MonoBehaviour
   
   public virtual void ChangeHat(Hat newHat, float transmissionChance)
   {
+
     // update the current hat
     SetCurrentHat(newHat);
     // display swap animation (must be done in main thread)
@@ -142,7 +157,7 @@ public class Trend : MonoBehaviour
   
   IEnumerable<GameObject> GetObjectsInRadius(Vector3 center, float radius)
   {
-    var colliders = Physics.OverlapSphere(center, radius);
+    var colliders = Physics2D.OverlapCircleAll(center, radius);//Physics.OverlapSphere(center, radius);
     return colliders.Select(u => u.gameObject);
     //return Physics.OverlapSphere(center, radius).Select(u => u.gameObject);
   }

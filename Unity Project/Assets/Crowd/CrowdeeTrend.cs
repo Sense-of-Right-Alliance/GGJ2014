@@ -10,8 +10,10 @@ public class CrowdeeTrend : Trend
   protected Timer SpreadSameTrendTimer;
   protected bool TryNewTrend = true;
   // time to wait after cooldown before initiating a hat event
-  protected virtual float MaxNoActionMilliseconds { get { return 5000; } } // maximum time after hat cools down before trying to use hat
+  protected virtual float MinNoActionMilliseconds { get { return 2000; } } // maximum time after hat cools down before trying to use hat
+  protected virtual float MaxNoActionMilliseconds { get { return 10000; } } // maximum time after hat cools down before trying to use hat
   protected Timer NoActionTimer;
+  protected double random;
   
 	// Use this for initialization
 	protected override void Start()
@@ -29,12 +31,14 @@ public class CrowdeeTrend : Trend
   // starts the no action timer for a random amount of time up to the defined maximum
   void StartNoActionTimer()
   {
-    NoActionTimer = new Timer(CSRNG.NextDouble()*MaxNoActionMilliseconds)
+    random = MinNoActionMilliseconds + CSRNG.NextDouble() * (MaxNoActionMilliseconds - MinNoActionMilliseconds);//CSRNG.NextDouble() * MaxNoActionMilliseconds;
+    NoActionTimer = new Timer(random)
     {
       AutoReset = false,
     };
     NoActionTimer.Elapsed += NoActionTimer_Elapsed;
     NoActionTimer.Start();
+   
   }
   
   // starts the spread same trend timer for a random amount of time within the defined limits
@@ -51,6 +55,7 @@ public class CrowdeeTrend : Trend
   // once the no action timer has elapsed, it's time to get out your hat
   void NoActionTimer_Elapsed (object sender, ElapsedEventArgs e)
   {
+
     Hat stylishHat = CurrentHat;
     if (TryNewTrend)
     {
@@ -58,7 +63,7 @@ public class CrowdeeTrend : Trend
       StartSpreadSameTrendTimer();
       TryNewTrend = false;
     }
-    ChangeHat(stylishHat, 1.0f);
+    ChangeHat(stylishHat, 0.05f);
   }
 
   // once the spread same trend timer has elapsed, it's time to try something new
