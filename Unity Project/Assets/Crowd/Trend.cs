@@ -5,7 +5,7 @@ using System.Linq;
 using System.Timers;
 
 // types of hats in the game
-public enum Hat { Pope, Bowler, Top }
+public enum Hat { Pope, Bowler, Top, Dick }
 
 public class Trend : MonoBehaviour
 {
@@ -40,6 +40,7 @@ public class Trend : MonoBehaviour
       {Hat.Pope, transform.Find("PopeHat").gameObject},
       {Hat.Bowler, transform.Find("BowlerHat").gameObject},
       {Hat.Top, transform.Find("TopHat").gameObject},
+      {Hat.Dick, transform.Find("DickHat").gameObject},
     };
   }
   

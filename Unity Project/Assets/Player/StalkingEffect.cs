@@ -7,7 +7,7 @@ public class StalkingEffect : MonoBehaviour {
   private GameObject target;
 
   private float stalkTimer = 2.0f; // time to wait before accumulating points
-  private float pointTimer = 0.2f; // gain points when 0
+  private float pointTimer = 0.1f; // gain points when 0
   private float minStalkDistance = 0.7f;
 
 	// Use this for initialization
@@ -27,9 +27,9 @@ public class StalkingEffect : MonoBehaviour {
       stalkTimer -= Time.deltaTime;
     }
 
-    transform.position = target.transform.position;
+    transform.position = detective.transform.position;
     float distance = Vector3.Distance(target.transform.position, detective.transform.position);//Mathf.Abs((target.transform.position - transform.position).magnitude);
-    Debug.Log(distance + " > " + minStalkDistance);
+    //Debug.Log(distance + " > " + minStalkDistance);
     if (distance > minStalkDistance)
     {
       target.GetComponent<PlayerClass>().isBeingStalked = false;
@@ -40,8 +40,8 @@ public class StalkingEffect : MonoBehaviour {
       if(pointTimer <= 0.0f) {
         detective.GetComponent<PlayerClass>().score += 1;
 
-        pointTimer = 0.2f + target.GetComponent<PlayerClass>().stalkValue;
-        target.GetComponent<PlayerClass>().stalkValue += pointTimer/15.0f;
+        pointTimer = 0.1f + target.GetComponent<PlayerClass>().stalkValue;
+        target.GetComponent<PlayerClass>().stalkValue += pointTimer/30.0f;
       }
 
       particleSystem.enableEmission = true;
