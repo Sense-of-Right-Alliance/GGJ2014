@@ -108,7 +108,7 @@ public class PlayerControl : MonoBehaviour
 
   public void GetTackled() {
     transform.Rotate(0, 0, 90);
-    tackleTimer = 8.0f;
+    tackleTimer = 5.0f;
     isTackled = true;
   }
 
