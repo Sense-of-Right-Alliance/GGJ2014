@@ -58,7 +58,7 @@ public class CanBeBossed : MonoBehaviour {
       isBossed = true;
       //Debug.Log("Boss Bumped");
     }
-    else if(collider.gameObject.GetComponent<CanBeBossed>().isBossed && !isBossed)
+    else if(collider.gameObject.tag != "Wall" && collider.gameObject.GetComponent<CanBeBossed>().isBossed && !isBossed)
     {
       theBoss.GetComponent<PlayerClass>().score += 2;
       isBossed = true;
@@ -66,10 +66,10 @@ public class CanBeBossed : MonoBehaviour {
   }
 
   void OnCollisionExit2D(Collision2D collider) {
-    if ((collider.gameObject.tag == "Player" && collider.gameObject.GetComponent<PlayerClass>().playerClass == Class.RoughHouser)
+    /*if ((collider.gameObject.tag == "Player" && collider.gameObject.GetComponent<PlayerClass>().playerClass == Class.RoughHouser)
       || collider.gameObject.GetComponent<CanBeBossed>().isBossed)
     {
       isBossed = false;
-    }
+    }*/
   }
 }

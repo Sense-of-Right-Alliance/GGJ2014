@@ -112,7 +112,7 @@ public class Trend : MonoBehaviour
             && !gameObject.GetComponent<PlayerClass>().immuneToTrends)) {
           var trend = gameObject.GetComponent<Trend>();
 
-          if (trend.CurrentHat != TransformHat && TransformTransmission > Random.value)
+          if (trend != null && trend.CurrentHat != TransformHat && TransformTransmission > Random.value)
           {
             if (gameObject.tag == "Player"  && gameObject.GetComponent<PlayerClass>().playerClass == Class.BaldMan)
               furtherTransmissionChance = 0;

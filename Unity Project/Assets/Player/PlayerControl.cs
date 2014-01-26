@@ -74,10 +74,17 @@ public class PlayerControl : MonoBehaviour
        // TODO-DG: Increase Arrow opacity by tiny every update loop  
       var color = arrow.GetComponent<SpriteRenderer>().color;
       color.a += 0.01f;
+      if(color.a > 1.0f) {
+        color.a = 1.0f;
+      }
+      Mathf.Clamp(color.a, 0.0f, 1.0f);
       arrow.GetComponent<SpriteRenderer>().color = color;
     } else {
       var color = arrow.GetComponent<SpriteRenderer>().color;
       color.a -= 0.02f;
+      if(color.a < 0.0f) {
+        color.a = 0.0f;
+      }
       arrow.GetComponent<SpriteRenderer>().color = color;
     }
       //Debug.Log(Input.GetAxis(InputName[ControllerInput.Trigger]));
@@ -102,9 +109,13 @@ public class PlayerControl : MonoBehaviour
   {
     if (!isTackled && GetComponent<PlayerClass>().CanMove)
     {
+      Debug.Log("P " + id + " moving");
+
       float h = Input.GetAxis(InputName[ControllerInput.Horizontal]);
 
       float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
+
+      Debug.Log("P " + id + " moving " + h + " " + v);
 
       float force = moveForce;
       if(GetComponent<PlayerClass>().baldMode) {
@@ -114,7 +125,6 @@ public class PlayerControl : MonoBehaviour
       rigidbody2D.AddForce(new Vector2(h, v).normalized * force * Time.deltaTime);
 
       if(rigidbody2D.velocity.magnitude > maxChaseSpeed) {
-        Debug.Log("Too Fast!");
         rigidbody2D.velocity = new Vector2(h, v).normalized * maxChaseSpeed; 
       }
 	        // TODO-DG: Find screen dimensions here and don't add force if they're going to go out of bounds.
