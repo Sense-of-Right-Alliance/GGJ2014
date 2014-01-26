@@ -8,7 +8,7 @@ public class StalkingEffect : MonoBehaviour {
 
   private float stalkTimer = 2.0f; // time to wait before accumulating points
   private float pointTimer = 0.1f; // gain points when 0
-  private float minStalkDistance = 0.7f;
+  private float minStalkDistance = 1.0f;
 
 	// Use this for initialization
 	void Start () {
