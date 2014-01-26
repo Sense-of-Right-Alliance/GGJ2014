@@ -68,6 +68,11 @@ public class PlayerControl : MonoBehaviour
 
     float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
 
+    if (id == 1)
+    {
+      Debug.Log("h = " + h + " v = " + v);
+    }
+
         rigidbody2D.AddForce(new Vector2(h,v).normalized * moveForce * Time.deltaTime);
 
     float currSpeed = new Vector2(h, v).magnitude;
