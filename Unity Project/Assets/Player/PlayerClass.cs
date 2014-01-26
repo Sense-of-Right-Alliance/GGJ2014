@@ -191,6 +191,10 @@ public class PlayerClass : MonoBehaviour {
   }
   
   void OnCollisionEnter2D(Collision2D collider) {
+    if (collider.gameObject.tag == "Wall")
+    {
+      return;
+    }
     HandleBump(collider.gameObject, collider.gameObject.GetComponent<Trend>().CurrentHat);
     if (playerClass == Class.Detective
       && collider.gameObject.tag == "Player" 
