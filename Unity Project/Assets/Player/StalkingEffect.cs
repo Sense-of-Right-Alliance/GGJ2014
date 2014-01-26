@@ -38,7 +38,7 @@ public class StalkingEffect : MonoBehaviour {
     } else if(stalkTimer <= 0.0f) {
       pointTimer -= Time.deltaTime;
       if(pointTimer <= 0.0f) {
-        detective.GetComponent<PlayerClass>().score += 1;
+        //detective.GetComponent<PlayerClass>().score += 1;
 
         pointTimer = 0.1f + target.GetComponent<PlayerClass>().stalkValue;
         target.GetComponent<PlayerClass>().stalkValue += pointTimer/30.0f;

@@ -99,7 +99,7 @@ public class Trend : MonoBehaviour
         if(gameObject.tag != "Player") {
           var trend = gameObject.GetComponent<Trend>();
 
-          if (TransformTransmission > Random.value) {
+          if (trend.CurrentHat != TransformHat && TransformTransmission > Random.value) {
             trendCount++;
             trend.ChangeHat(TransformHat, furtherTransmissionChance);
            
