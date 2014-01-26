@@ -6,7 +6,7 @@ public class StalkingEffect : MonoBehaviour {
   private GameObject detective;
   private GameObject target;
 
-  private float stalkTimer = 2.0f; // time to wait before accumulating points
+  private float stalkTimer = 0.0f; // time to wait before accumulating points
   private float pointTimer = 0.1f; // gain points when 0
   private float minStalkDistance = 1.0f;
 
@@ -30,7 +30,8 @@ public class StalkingEffect : MonoBehaviour {
     transform.position = detective.transform.position;
     float distance = Vector3.Distance(target.transform.position, detective.transform.position);//Mathf.Abs((target.transform.position - transform.position).magnitude);
     //Debug.Log(distance + " > " + minStalkDistance);
-    if (distance > minStalkDistance)
+    Debug.Log("Stalked " + target.GetComponent<PlayerClass>().isBeingStalked);
+    if (!target.GetComponent<PlayerClass>().isBeingStalked || distance > minStalkDistance)
     {
       target.GetComponent<PlayerClass>().isBeingStalked = false;
       Destroy(gameObject);

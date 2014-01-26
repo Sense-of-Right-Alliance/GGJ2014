@@ -9,6 +9,9 @@ public class PlayerControl : MonoBehaviour
 	public float moveForce = 500f;			// Amount of force added to move the player left and right.
 	public float maxSpeed = 1f;				// The fastest 
 
+  float chaseForce = 501f;
+  float maxChaseSpeed = 0.5f;
+
 	public int id = 1; // identity of the player (assigned 1 through 4)
 
   private Animator anim;          // Reference to the player's animator component.
@@ -45,7 +48,7 @@ public class PlayerControl : MonoBehaviour
 	// Update is called once per frame
 	void Update()
   {
-    if (GetComponent<PlayerClass>().playerClass != Class.Detective && !isTackled)
+    if (GetComponent<PlayerClass>().playerClass != Class.BaldMan && GetComponent<PlayerClass>().playerClass != Class.Detective && !isTackled)
     {
       if (Input.GetButtonDown(InputName[ControllerInput.Y]))
       {
@@ -63,6 +66,13 @@ public class PlayerControl : MonoBehaviour
       }
     }
 
+
+
+    if (Input.GetButtonDown(InputName[ControllerInput.A]))
+    {
+      GetComponent<PlayerClass>().TryInitiateBaldMode();
+    }
+
     if (tackleTimer > 0.0f)
     {
       tackleTimer -= Time.deltaTime;
@@ -76,14 +86,23 @@ public class PlayerControl : MonoBehaviour
 	// Fixed update for ensure physics stuff happens only once per frame.
 	void FixedUpdate()
   {
-    if (!isTackled)
+    if (!isTackled && GetComponent<PlayerClass>().CanMove)
     {
       float h = Input.GetAxis(InputName[ControllerInput.Horizontal]);
 
       float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
 
+      float force = moveForce;
+      if(GetComponent<PlayerClass>().baldMode) {
+        force = chaseForce;
+      }
 
-      rigidbody2D.AddForce(new Vector2(h, v).normalized * moveForce * Time.deltaTime);
+      rigidbody2D.AddForce(new Vector2(h, v).normalized * force * Time.deltaTime);
+
+      if(rigidbody2D.velocity.magnitude > maxChaseSpeed) {
+        Debug.Log("Too Fast!");
+        rigidbody2D.velocity = new Vector2(h, v).normalized * maxChaseSpeed; 
+      }
 
       float currSpeed = new Vector2(h, v).magnitude;
       //Debug.Log(currSpeed);
