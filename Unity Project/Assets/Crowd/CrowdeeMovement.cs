@@ -20,8 +20,8 @@ public class CrowdeeMovement : MonoBehaviour {
 
 	private float x_bound_pos = 9.0f;
     private float x_bound_neg = -9.0f;
-	private float y_bound_pos = 3.0f;
-    private float y_bound_neg = -3.0f;
+	private float y_bound_pos = 2.5f;
+    private float y_bound_neg = -3.5f;
 
   private Animator anim;          // Reference to the player's animator component.
 
@@ -36,24 +36,24 @@ public class CrowdeeMovement : MonoBehaviour {
 		timer = Random.Range (min_wait, max_wait);
 		float randomizer = Random.value;
 		if (randomizer <= 0.2f) {
-			x_bound_pos = 0.0f;
-            y_bound_pos = 0.0f;
-			Walk ();
+			  x_bound_pos = 0.5f;
+        y_bound_pos = 0.5f;
+			  Walk ();
 		} else if (randomizer <= 0.4f) {
-            x_bound_neg = 0.0f;
-            y_bound_pos = 0.0f;
-			state = CrowdeeState.idle;
+        x_bound_neg = -0.5f;
+        y_bound_pos = 0.0f;
+	  		state = CrowdeeState.idle;
 		} else if (randomizer <= 0.6f) {
-            x_bound_pos = 0.0f;
-            y_bound_neg = 0.0f;        
-            Walk ();
+        x_bound_pos = 0.2f;
+        y_bound_neg = -1.0f;        
+        Walk ();
 		} else if (randomizer <= 0.8f) {
-            x_bound_neg = 0.0f;
-            y_bound_neg = 0.0f;
-            state = CrowdeeState.idle;
-        } else {
-            Walk ();
-        }
+        x_bound_neg = -0.2f;
+        y_bound_neg = -0.5f;
+        state = CrowdeeState.idle;
+    } else {
+        Walk ();
+    }
 	}
 	
 	// Update is called once per frame

@@ -103,6 +103,20 @@ public class PlayerControl : MonoBehaviour
         Debug.Log("Too Fast!");
         rigidbody2D.velocity = new Vector2(h, v).normalized * maxChaseSpeed; 
       }
+	        // TODO-DG: Find screen dimensions here and don't add force if they're going to go out of bounds.
+      // TODO-NP: Get me the proper x and y values to plug into the little magic iffffs down there. (I can't seem to access the player transform in here)
+      // TODO-ALL: OR, use Unity magic to just do collision with the screen edges and GUI? Then they would bounce.
+      /*if ( this.x >= 9.5 && h > 0.0f) {
+         h = 0.0f;
+      } else if ( this.x <= -9.5 && h < 0.0f) {
+        h = 0.0f;
+      }
+      
+      if ( this.y >= 4.0 && v > 0.0f) {
+        v = 0.0f;
+      } else if ( this.y <= 3.0 && v < 0.0f) {
+        v = 0.0f;
+      }*/
 
       float currSpeed = new Vector2(h, v).magnitude;
       //Debug.Log(currSpeed);
@@ -114,7 +128,7 @@ public class PlayerControl : MonoBehaviour
 
   public void GetTackled() {
     transform.Rotate(0, 0, 90);
-    tackleTimer = 8.0f;
+    tackleTimer = 5.0f;
     isTackled = true;
   }
 

@@ -26,6 +26,8 @@ public class PlayerClass : MonoBehaviour {
 
   public Class playerClass;
   public int score = 0;
+  
+  private Class previousDetectedPlayer = Class.Detective;
 
   public bool CanMove { get { return playerClass != Class.BaldMan || baldModeWarmupTimer <= 0.0f; } }
 
@@ -196,6 +198,8 @@ public class PlayerClass : MonoBehaviour {
       && collider.gameObject.GetComponent<PlayerClass>().score >= 20
         && (collider.gameObject.GetComponent<PlayerClass>().playerClass != Class.BaldMan || !collider.gameObject.GetComponent<PlayerClass>().baldMode))
     {
+		previousDetectedPlayer = collider.gameObject.GetComponent<PlayerClass>().playerClass;
+
       collider.gameObject.GetComponent<PlayerControl>().GetTackled();
       score += 20;
       collider.gameObject.GetComponent<PlayerClass>().score -= 20;
