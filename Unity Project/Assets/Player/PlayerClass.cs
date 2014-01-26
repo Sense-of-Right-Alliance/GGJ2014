@@ -53,7 +53,7 @@ public class PlayerClass : MonoBehaviour {
   public void HandleTrendSet(int numberOfPeople) {
     if (playerClass == Class.TrendSetter)
     {
-      
+
     }
   }
 
@@ -121,12 +121,12 @@ public class PlayerClass : MonoBehaviour {
     if(playerClass == Class.Detective
            && collider.gameObject.tag == "Player" 
            && collider.gameObject.GetComponent<PlayerClass>().isBeingStalked
-           && collider.gameObject.GetComponent<PlayerClass>().score >= 25
+           && collider.gameObject.GetComponent<PlayerClass>().score >= 20
            && collider.gameObject.GetComponent<PlayerClass>().playerClass != previousDetectedPlayer) {
-      previousDetectedPlayer = collider.gameObject.GetComponent<PlayerClass>().playerClass;
+          previousDetectedPlayer = collider.gameObject.GetComponent<PlayerClass>().playerClass;
       collider.gameObject.GetComponent<PlayerControl>().GetTackled();
-      score += 50;
-      collider.gameObject.GetComponent<PlayerClass>().score -= 25;
+      score += 20;
+      collider.gameObject.GetComponent<PlayerClass>().score -= 20;
     }
   }
 }
