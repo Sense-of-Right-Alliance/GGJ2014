@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Timers;
 
@@ -13,75 +13,79 @@ public class CrowdeeTrend : Trend
   protected virtual float MinNoActionMilliseconds { get { return 2000; } } // maximum time after hat cools down before trying to use hat
   protected virtual float MaxNoActionMilliseconds { get { return 10000; } } // maximum time after hat cools down before trying to use hat
   protected Timer NoActionTimer;
-  protected double random;
+  
+  bool NoActionTimerElapsed, HatCooldownTimerElapsed, StartSameTrendTimer;
   
 	// Use this for initialization
 	protected override void Start()
   {
     base.Start();
-    StartNoActionTimer();
+    StartNoActionTimer(Random.Range(MinNoActionMilliseconds, MaxNoActionMilliseconds));
   }
   
   // Update is called once per frame
   protected override void Update()
   {
     base.Update();
+    
+    // once the no action timer has elapsed, it's time to get out your hat
+    if (NoActionTimerElapsed)
+    {
+      Hat stylishHat = CurrentHat;
+      if (TryNewTrend)
+      {
+          stylishHat = (Hat) Random.Range(0, System.Enum.GetNames(typeof(Hat)).Length);
+          StartSpreadSameTrendTimer(Random.Range(MinSameTrendMilliseconds, MaxSameTrendMilliseconds));
+          TryNewTrend = false;
+      }
+      ChangeHat(stylishHat, 1.0f);
+      NoActionTimerElapsed = false;
+    }
+    if (HatCooldownTimerElapsed)
+    {
+      StartNoActionTimer(Random.Range(MinNoActionMilliseconds, MaxNoActionMilliseconds));
+      HatCooldownTimerElapsed = false;
+    }
+    if (StartSameTrendTimer)
+    {
+      StartSpreadSameTrendTimer(Random.Range(MinSameTrendMilliseconds, MaxSameTrendMilliseconds));
+    }
   }
   
   // starts the no action timer for a random amount of time up to the defined maximum
-  void StartNoActionTimer()
+  void StartNoActionTimer(float time)
   {
-    random = MinNoActionMilliseconds + CSRNG.NextDouble() * (MaxNoActionMilliseconds - MinNoActionMilliseconds);//CSRNG.NextDouble() * MaxNoActionMilliseconds;
-    NoActionTimer = new Timer(random)
+    //random = MinNoActionMilliseconds + CSRNG.NextDouble() * (MaxNoActionMilliseconds - MinNoActionMilliseconds);//CSRNG.NextDouble() * MaxNoActionMilliseconds;
+    NoActionTimer = new Timer(time)
     {
       AutoReset = false,
     };
-    NoActionTimer.Elapsed += NoActionTimer_Elapsed;
+    NoActionTimer.Elapsed += (object sender, ElapsedEventArgs e) => NoActionTimerElapsed = true;
     NoActionTimer.Start();
-   
   }
   
   // starts the spread same trend timer for a random amount of time within the defined limits
-  void StartSpreadSameTrendTimer()
+  void StartSpreadSameTrendTimer(float time)
   {
-    SpreadSameTrendTimer = new Timer(MinSameTrendMilliseconds + CSRNG.NextDouble()*(MaxSameTrendMilliseconds - MinSameTrendMilliseconds))
+    SpreadSameTrendTimer = new Timer(time) //MinSameTrendMilliseconds + CSRNG.NextDouble()*(MaxSameTrendMilliseconds - MinSameTrendMilliseconds
     {
       AutoReset = false,
     };
-    SpreadSameTrendTimer.Elapsed += SpreadSameTrendTimer_Elapsed;
+    // once the spread same trend timer has elapsed, it's time to try something new
+    SpreadSameTrendTimer.Elapsed += (object sender, ElapsedEventArgs e) => TryNewTrend = true;
     SpreadSameTrendTimer.Start();
-  }
-  
-  // once the no action timer has elapsed, it's time to get out your hat
-  void NoActionTimer_Elapsed (object sender, ElapsedEventArgs e)
-  {
-
-    Hat stylishHat = CurrentHat;
-    if (TryNewTrend)
-    {
-      stylishHat = (Hat)(int)(CSRNG.NextDouble()*System.Enum.GetNames(typeof(Hat)).Length);
-      StartSpreadSameTrendTimer();
-      TryNewTrend = false;
-    }
-    ChangeHat(stylishHat, 0.05f);
-  }
-
-  // once the spread same trend timer has elapsed, it's time to try something new
-  void SpreadSameTrendTimer_Elapsed (object sender, ElapsedEventArgs e)
-  {
-    TryNewTrend = true;
   }
   
   protected override void HatCooldownTimer_Elapsed(object sender, ElapsedEventArgs e)
   {
     base.HatCooldownTimer_Elapsed(sender, e);
-    StartNoActionTimer();
+    HatCooldownTimerElapsed = true;
   }
   
   public override void ChangeHat(Hat newHat, float transmissionChance)
   {
     if (newHat != CurrentHat)
-      StartSpreadSameTrendTimer();
+      StartSameTrendTimer = true;
     
     base.ChangeHat(newHat, transmissionChance);
     NoActionTimer.Stop();
