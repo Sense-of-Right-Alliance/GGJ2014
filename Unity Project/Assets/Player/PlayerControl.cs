@@ -13,6 +13,9 @@ public class PlayerControl : MonoBehaviour
 
   private Animator anim;          // Reference to the player's animator component.
 
+  private float tackleTimer = 0.0f;
+  private bool isTackled = false;
+
   // types of controller input (names should those in Input Manager)
   private enum ControllerInput { Horizontal, Vertical, A, B, X, Y, Trigger }
   // association between a controller input type and the name assigned to it in the Input Manager
@@ -42,7 +45,7 @@ public class PlayerControl : MonoBehaviour
 	// Update is called once per frame
 	void Update()
   {
-    if (GetComponent<PlayerClass>().playerClass != Class.Detective)
+    if (GetComponent<PlayerClass>().playerClass != Class.Detective && !isTackled)
     {
       if (Input.GetButtonDown(InputName[ControllerInput.Y]))
       {
@@ -59,25 +62,42 @@ public class PlayerControl : MonoBehaviour
         GetComponent<PlayerTrend>().TryChangeHat(Hat.Top);
       }
     }
+
+    if (tackleTimer > 0.0f)
+    {
+      tackleTimer -= Time.deltaTime;
+      if(tackleTimer <= 0.0f) {
+        isTackled = false;
+        transform.Rotate(0, 0, -90);
+      }
+    }
   }
-  
+
 	// Fixed update for ensure physics stuff happens only once per frame.
 	void FixedUpdate()
   {
-    float h = Input.GetAxis(InputName[ControllerInput.Horizontal]);
+    if (!isTackled)
+    {
+      float h = Input.GetAxis(InputName[ControllerInput.Horizontal]);
 
-    float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
+      float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
 
 
-        rigidbody2D.AddForce(new Vector2(h,v).normalized * moveForce * Time.deltaTime);
+      rigidbody2D.AddForce(new Vector2(h, v).normalized * moveForce * Time.deltaTime);
 
-    float currSpeed = new Vector2(h, v).magnitude;
-    //Debug.Log(currSpeed);
+      float currSpeed = new Vector2(h, v).magnitude;
+      //Debug.Log(currSpeed);
 
-    // The Speed animator parameter is set to the absolute value of the horizontal input.
-    anim.SetFloat("Speed", Mathf.Abs(new Vector2(h,v).magnitude));
-		
+      // The Speed animator parameter is set to the absolute value of the horizontal input.
+      anim.SetFloat("Speed", Mathf.Abs(new Vector2(h, v).magnitude));
+    }
 	}
+
+  public void GetTackled() {
+    transform.Rotate(0, 0, 90);
+    tackleTimer = 8.0f;
+    isTackled = true;
+  }
 
   
 }
