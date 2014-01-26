@@ -14,7 +14,7 @@ public class Interface : MonoBehaviour {
   public GameObject[] players;
   private Rect[] scoreRects;
 
-  private float gameTimer = 120.0f;
+  private float gameTimer = 240.0f;
   private Rect timerRect;
 
   private int[] rankings = new int[4];
@@ -53,9 +53,10 @@ public class Interface : MonoBehaviour {
       {
         var playersByScore = players.OrderByDescending(u => u.GetComponent<PlayerClass>().score).ToList();
         positions = new int[4];
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) {
+          players[i].SetActive(false);
           positions[i] = playersByScore.IndexOf(players[i]);
-
+        }
  
 
         state = GameInterfaceState.Score;
