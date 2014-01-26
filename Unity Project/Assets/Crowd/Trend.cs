@@ -157,6 +157,7 @@ public class Trend : MonoBehaviour
     
     if (StartingTrendEvent)
     {
+      GetComponent<PlayerClass>().MakeTrendAnimation();
       ChangeHat(NewTrendEventHat, 1.0f, GetComponent<PlayerClass>(), GetComponent<PlayerClass>());
       StartingTrendEvent = false;
     }

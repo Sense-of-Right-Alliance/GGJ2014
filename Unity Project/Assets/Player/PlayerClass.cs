@@ -130,6 +130,10 @@ public class PlayerClass : MonoBehaviour {
 
   }
 
+  public void MakeTrendAnimation() {
+    Instantiate(testExplosion, transform.position, transform.rotation);
+  }
+
   // For pickPocket!!!
   // called on a collision, passing in the colliding persons hat.
   public void HandleBump(GameObject gameObject, Hat bumpedHat) {
