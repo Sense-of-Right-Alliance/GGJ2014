@@ -22,7 +22,7 @@ public class PlayerControl : MonoBehaviour
   private GameObject arrow;
 
   // types of controller input (names should those in Input Manager)
-  private enum ControllerInput { Horizontal, Vertical, A, B, X, Y, Trigger }
+  private enum ControllerInput { Horizontal, Vertical, A, B, X, Y, Trigger, ID }
   // association between a controller input type and the name assigned to it in the Input Manager
   private Dictionary<ControllerInput, string> InputName;
 
@@ -94,6 +94,11 @@ public class PlayerControl : MonoBehaviour
       GetComponent<PlayerClass>().TryInitiateBaldMode();
     }
 
+    if (Input.GetButtonDown(InputName[ControllerInput.ID]))
+    {
+      Debug.Log("ID: " + id);
+    }
+
     if (tackleTimer > 0.0f)
     {
       tackleTimer -= Time.deltaTime;
@@ -109,13 +114,11 @@ public class PlayerControl : MonoBehaviour
   {
     if (!isTackled && GetComponent<PlayerClass>().CanMove)
     {
-      Debug.Log("P " + id + " moving");
 
       float h = Input.GetAxis(InputName[ControllerInput.Horizontal]);
 
       float v = -Input.GetAxis(InputName[ControllerInput.Vertical]);
 
-      Debug.Log("P " + id + " moving " + h + " " + v);
 
       float force = moveForce;
       if(GetComponent<PlayerClass>().baldMode) {
