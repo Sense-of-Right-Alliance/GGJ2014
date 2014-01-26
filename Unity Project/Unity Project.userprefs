@@ -13,10 +13,6 @@
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="D:\Shared\GitHub\GGJ2014\Unity Project\Assets\Crowd\Trend.cs" line="158" />
-      <Breakpoint file="C:\Users\Dylan\Documents\GitHub\GGJ2014\Unity Project\Assets\Crowd\CrowdeeTrend.cs" line="130" />
-    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

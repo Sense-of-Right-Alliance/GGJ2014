@@ -67,7 +67,7 @@ public class CanBeBossed : MonoBehaviour {
 
   void OnCollisionExit2D(Collision2D collider) {
     if ((collider.gameObject.tag == "Player" && collider.gameObject.GetComponent<PlayerClass>().playerClass == Class.RoughHouser)
-      && collider.gameObject.GetComponent<CanBeBossed>().isBossed)
+      || collider.gameObject.GetComponent<CanBeBossed>().isBossed)
     {
       isBossed = false;
     }

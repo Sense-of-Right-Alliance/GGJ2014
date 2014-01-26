@@ -51,23 +51,31 @@ public class PlayerClass : MonoBehaviour {
   public void HandleTrendSet(int numberOfPeople) {
     if (playerClass == Class.TrendSetter)
     {
-      if (numberOfPeople > 8)
-      {
-        score += numberOfPeople;
-      }
+      
     }
   }
 
   // For pickPocket!!!
   // called on a collision, passing in the colliding persons hat.
-  public void HandleBump(Hat theirHat) {
+  public void HandleBump(GameObject gameObject, Hat bumpedHat) {
     if (playerClass == Class.PickPocket)
     {
+      var thiefTrend = GetComponent<PlayerTrend>();
+      var bumpedClass = gameObject.GetComponent<PlayerClass>();
       //Debug.Log("Is Pickpocket: " + theirHat.ToString() + " " + GetComponent<PlayerTrend>().CurrentHat.ToString());
-      if (theirHat != GetComponent<PlayerTrend>().CurrentHat && rigidbody2D.velocity.magnitude > 0.05f)
+      if (bumpedHat != thiefTrend.CurrentHat
+          && rigidbody2D.velocity.magnitude > 0.05f
+          && (bumpedClass == null || bumpedClass.score >= 8))
       {
         Instantiate(testExplosion, transform.position, transform.rotation);
         score += 2;
+        if (bumpedClass != null) // thief steals from other players
+        {
+          var bumpedTrend = gameObject.GetComponent<PlayerTrend>();
+          bumpedTrend.StolenFromRecently = true;
+          score += 6;
+          gameObject.GetComponent<PlayerClass>().score -= 8;
+        }
       }
     }
   }
@@ -107,6 +115,14 @@ public class PlayerClass : MonoBehaviour {
   }
   
   void OnCollisionEnter2D(Collision2D collider) {
-    HandleBump(collider.gameObject.GetComponent<Trend>().CurrentHat);
+    HandleBump(collider.gameObject, collider.gameObject.GetComponent<Trend>().CurrentHat);
+    if(playerClass == Class.Detective
+           && collider.gameObject.tag == "Player" 
+           && collider.gameObject.GetComponent<PlayerClass>().isBeingStalked
+           && collider.gameObject.GetComponent<PlayerClass>().score >= 25) {
+      collider.gameObject.GetComponent<PlayerControl>().GetTackled();
+      score += 50;
+      collider.gameObject.GetComponent<PlayerClass>().score -= 25;
+    }
   }
 }
