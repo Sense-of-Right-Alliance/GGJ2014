@@ -42,19 +42,22 @@ public class PlayerControl : MonoBehaviour
 	// Update is called once per frame
 	void Update()
   {
-    if (Input.GetButtonDown(InputName[ControllerInput.A]))
+    if (GetComponent<PlayerClass>().playerClass != Class.Detective)
     {
-      GetComponent<PlayerTrend>().TryChangeHat(Hat.Pope);
-    }
+      if (Input.GetButtonDown(InputName[ControllerInput.Y]))
+      {
+        GetComponent<PlayerTrend>().TryChangeHat(Hat.Pope);
+      }
     
-    if (Input.GetButtonDown(InputName[ControllerInput.B]))
-    {
-      GetComponent<PlayerTrend>().TryChangeHat(Hat.Bowler);
-    }
+      if (Input.GetButtonDown(InputName[ControllerInput.B]))
+      {
+        GetComponent<PlayerTrend>().TryChangeHat(Hat.Bowler);
+      }
     
-    if (Input.GetButtonDown(InputName[ControllerInput.X]))
-    {
-      GetComponent<PlayerTrend>().TryChangeHat(Hat.Top);
+      if (Input.GetButtonDown(InputName[ControllerInput.X]))
+      {
+        GetComponent<PlayerTrend>().TryChangeHat(Hat.Top);
+      }
     }
   }
   
