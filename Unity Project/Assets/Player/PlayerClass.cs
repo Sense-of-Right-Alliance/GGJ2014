@@ -123,7 +123,7 @@ public class PlayerClass : MonoBehaviour {
            && collider.gameObject.GetComponent<PlayerClass>().isBeingStalked
            && collider.gameObject.GetComponent<PlayerClass>().score >= 20
            && collider.gameObject.GetComponent<PlayerClass>().playerClass != previousDetectedPlayer) {
-          previousDetectedPlayer = collider.gameObject.GetComponent<PlayerClass>().playerClass;
+        previousDetectedPlayer = collider.gameObject.GetComponent<PlayerClass>().playerClass;
       collider.gameObject.GetComponent<PlayerControl>().GetTackled();
       score += 20;
       collider.gameObject.GetComponent<PlayerClass>().score -= 20;
