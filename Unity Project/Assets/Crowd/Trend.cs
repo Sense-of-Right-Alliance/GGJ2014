@@ -205,7 +205,7 @@ public class Trend : MonoBehaviour
     }
     
     if (initiator != null && initiator.playerClass == Class.TrendSetter && initiator != self)
-      initiator.score += 1;
+      initiator.score += 0.5f;
     
     // update the current hat
     SetCurrentHat(newHat);

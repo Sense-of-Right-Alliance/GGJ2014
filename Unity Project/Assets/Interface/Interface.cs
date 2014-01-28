@@ -14,7 +14,7 @@ public class Interface : MonoBehaviour {
   public GameObject[] players;
   private Rect[] scoreRects;
 
-  private float gameTimer = 240.0f;
+  private float gameTimer = 5.0f;//240.0f;
   private Rect timerRect;
 
   private int[] rankings = new int[4];
@@ -87,18 +87,18 @@ public class Interface : MonoBehaviour {
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.width * score.height / score.width), score);
         for (int i = 0; i < 4; i++)
         {
-          GUI.Label(scoreRects[i], players[i].GetComponent<PlayerClass>().score.ToString(), scoreGUIStyle);
+          GUI.Label(scoreRects[i], ((int)(players[i].GetComponent<PlayerClass>().score)).ToString(), scoreGUIStyle);
         }
         GUI.Label(timerRect,gameTimer.ToString(), scoreGUIStyle);
         break;
       case(GameInterfaceState.Score):
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), screens[0]);
         scoreGUIStyle.fontSize = 20;
-        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 0 * Screen.height / 5, 100,50), positionStrings[positions[0]] + "   " +  players[0].GetComponent<PlayerClass>().score.ToString(), scoreGUIStyle);
+        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 0 * Screen.height / 5, 100,50), positionStrings[positions[0]] + "   " +  ((int)(players[0].GetComponent<PlayerClass>().score)).ToString(), scoreGUIStyle);
 
-        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 1 * Screen.height / 5, 100,50), positionStrings[positions[1]] + "   " +  players[1].GetComponent<PlayerClass>().score.ToString(), scoreGUIStyle);
-        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 2 * Screen.height / 5, 100,50), positionStrings[positions[2]] + "   " +  players[2].GetComponent<PlayerClass>().score.ToString(), scoreGUIStyle);
-        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 3 * Screen.height / 5, 100,50), positionStrings[positions[3]] + "   " +  players[3].GetComponent<PlayerClass>().score.ToString(), scoreGUIStyle);
+        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 1 * Screen.height / 5, 100,50), positionStrings[positions[1]] + "   " +  ((int)(players[1].GetComponent<PlayerClass>().score)).ToString(), scoreGUIStyle);
+        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 2 * Screen.height / 5, 100,50), positionStrings[positions[2]] + "   " +  ((int)(players[2].GetComponent<PlayerClass>().score)).ToString(), scoreGUIStyle);
+        GUI.Label(new Rect(scoreRects[3].x, Screen.height / 8 + 3 * Screen.height / 5, 100,50), positionStrings[positions[3]] + "   " +  ((int)(players[3].GetComponent<PlayerClass>().score)).ToString(), scoreGUIStyle);
 
         break;
       case(GameInterfaceState.Credits):
