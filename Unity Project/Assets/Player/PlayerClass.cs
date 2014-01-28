@@ -25,7 +25,7 @@ public class PlayerClass : MonoBehaviour {
   private GameObject lastBaldMan;
 
   public Class playerClass;
-  public int score = 0;
+  public float score = 0;
   
   private PlayerClass previousDetectedPlayer = null;
 
@@ -117,7 +117,6 @@ public class PlayerClass : MonoBehaviour {
   }
 
   public void ChangeClass(Class c, Hat h) {
-    Debug.Log("Class " + c + " Hat " + h);
     playerClass = c;
     if (c == Class.BaldMan)
     {
