@@ -70,7 +70,6 @@ public class PlayerClass : MonoBehaviour {
       {
         immuneToTrends = false;
         baldModeCooldownTimer = baldModeCooldown;
-        Debug.Log("BaldMode Off");
       }
     }
 
@@ -85,7 +84,7 @@ public class PlayerClass : MonoBehaviour {
       if(baldModeWarmupTimer <= 0.0f) {
         baldMode = true;
         baldModeDurationTimer = baldModeDuration;
-        Debug.Log("Initiate BALD MODE");
+        GetComponent<SFXPlayer>().PlaySFX("BaldMode");
 
       }
     }
@@ -106,14 +105,24 @@ public class PlayerClass : MonoBehaviour {
       GetComponent<Trend>().SetCurrentHat(Hat.NoHat);
       immuneToTrends = true;
       isBeingStalked = false;
+      GetComponent<SFXPlayer>().PlaySFX("BaldManWindup");
+      var i = Camera.main.GetComponent<Interface>();
+      if(i != null) 
+        i.baldModeOn = true;
     }
   }
 
   public void BaldModeOff() {
-    baldMode = false;
-    baldModeCooldownTimer = baldModeCooldown;
-    baldModeDurationTimer = 0.0f;
-    Debug.Log("BaldMode Off");
+    if (baldMode = true)
+    {
+      baldMode = false;
+      baldModeCooldownTimer = baldModeCooldown;
+      baldModeDurationTimer = 0.0f;
+      GetComponent<SFXPlayer>().Stop();
+      var i = Camera.main.GetComponent<Interface>();
+      if (i != null) 
+        i.baldModeOn = false;
+    }
   }
 
   public void ChangeClass(Class c, Hat h) {
@@ -143,10 +152,12 @@ public class PlayerClass : MonoBehaviour {
       //Debug.Log("Is Pickpocket: " + theirHat.ToString() + " " + GetComponent<PlayerTrend>().CurrentHat.ToString());
       if (bumpedHat != thiefTrend.CurrentHat
           && rigidbody2D.velocity.magnitude > 0.05f
-          && (bumpedClass == null || bumpedClass.score >= 8))
+          && (bumpedClass == null || bumpedClass.score >= 8)
+          && !gameObject.GetComponent<Trend>().StolenFromRecently)
       {
         Instantiate(testExplosion, transform.position, transform.rotation);
         score += 2;
+        GetComponent<SFXPlayer>().PlaySFX("Crook");
         if (bumpedClass != null) // thief steals from other players
         {
           var bumpedTrend = gameObject.GetComponent<PlayerTrend>();
@@ -207,20 +218,23 @@ public class PlayerClass : MonoBehaviour {
         && collider.gameObject.GetComponent<PlayerClass>() != previousDetectedPlayer)
     {
 		  previousDetectedPlayer = collider.gameObject.GetComponent<PlayerClass>();
-
+      GetComponent<SFXPlayer>().PlaySFX("Detective");
       collider.gameObject.GetComponent<PlayerControl>().GetTackled();
-      score += 20;
-      collider.gameObject.GetComponent<PlayerClass>().score -= 20;
+      score += 20 + (int)((float)collider.gameObject.GetComponent<PlayerClass>().score * 0.10f);
+      collider.gameObject.GetComponent<PlayerClass>().score -= 20 + (int)((float)collider.gameObject.GetComponent<PlayerClass>().score * 0.10f);;
       collider.gameObject.GetComponent<PlayerClass>().isBeingStalked = false;
     }
     else if(playerClass == Class.BaldMan
             && collider.gameObject.tag == "Player" 
             && baldMode && collider.gameObject != lastBaldMan)
     {
+
       ChangeClass(collider.gameObject.GetComponent<PlayerClass>().playerClass, collider.gameObject.GetComponent<Trend>().CurrentHat);
       collider.gameObject.GetComponent<PlayerClass>().ChangeClass(Class.BaldMan, Hat.NoHat);
+      GetComponent<SFXPlayer>().Stop();
       collider.gameObject.GetComponent<PlayerClass>().TryInitiateBaldMode();
       BaldModeOff();
+      GetComponent<SFXPlayer>().PlaySFX("BaldManGotcha");
       collider.gameObject.GetComponent<PlayerClass>().lastBaldMan = gameObject;
 
       score += 20 + (int)((float)collider.gameObject.GetComponent<PlayerClass>().score * 0.10f);

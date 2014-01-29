@@ -14,7 +14,7 @@ public class Interface : MonoBehaviour {
   public GameObject[] players;
   private Rect[] scoreRects;
 
-  private float gameTimer = 5.0f;//240.0f;
+  private float gameTimer = 240.0f;
   private Rect timerRect;
 
   private int[] rankings = new int[4];
@@ -23,6 +23,11 @@ public class Interface : MonoBehaviour {
 
   List<string> positionStrings;
   int[] positions;
+
+  public GUIStyle baldModeStyle;
+  public bool baldModeOn = false;
+  private bool baldModeFlash = true;
+  private float baldModeFlashTimer = 0.5f;
 
 	// Use this for initialization
 	void Start () {
@@ -63,13 +68,22 @@ public class Interface : MonoBehaviour {
       }
     }
 
-    if (Input.GetButtonDown("P1_A"))
+    if (Input.GetButtonDown("P1_Start"))
     {
       if(state == GameInterfaceState.Score) {
         state = GameInterfaceState.Credits;
       } else if(state == GameInterfaceState.Credits) {
         Application.LoadLevel("MainMenu");
     
+      }
+    }
+
+    if (baldModeOn)
+    {
+      baldModeFlashTimer -= Time.deltaTime;
+      if(baldModeFlashTimer <= 0.0f) {
+        baldModeFlashTimer = 0.5f;
+        baldModeFlash = !baldModeFlash;
       }
     }
 
@@ -90,6 +104,12 @@ public class Interface : MonoBehaviour {
           GUI.Label(scoreRects[i], ((int)(players[i].GetComponent<PlayerClass>().score)).ToString(), scoreGUIStyle);
         }
         GUI.Label(timerRect,gameTimer.ToString(), scoreGUIStyle);
+
+        if(baldModeOn && baldModeFlash) {
+          GUI.Label(new Rect(0,0,Screen.width / 4, Screen.height / 6), "BALD", baldModeStyle);
+          GUI.Label(new Rect(3 * Screen.width / 4, 0,Screen.width / 4, Screen.height / 6), "MODE", baldModeStyle);
+        }
+
         break;
       case(GameInterfaceState.Score):
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), screens[0]);
