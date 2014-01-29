@@ -101,6 +101,10 @@ public class Trend : MonoBehaviour
     // only npcs and the trend setter can cause trends
     if (TransformWaiting && ((tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.TrendSetter) || tag != "Player"))
     {
+      if(tag == "Player" && GetComponent<PlayerClass>().playerClass == Class.TrendSetter) {
+        GetComponent<SFXPlayer>().PlaySFX("Crowd");
+      }
+
       //Debug.Log(TransformTransmission);
       var furtherTransmissionChance = TransformTransmission * 0.5f - 0.05f;
       var nearbyObjects = GetObjectsInRadius(transform.position, 1);
@@ -151,8 +155,11 @@ public class Trend : MonoBehaviour
     if (RespondingToTrendEvent)
     {
       RespondingToTrendEvent = false;
-      if (CurrentHat != TrendEventHat)
+      if (CurrentHat != TrendEventHat) {
+        //if(TrendEventInitiator != null && TrendEventInitiator.tag == "Player" && TrendEventInitiator.playerClass == Class.TrendSetter)
+          //GetComponent<SFXPlayer>().PlaySFX("Crowd");
         ChangeHat(TrendEventHat, TrendEventTransmissionRate, TrendEventInitiator, GetComponent<PlayerClass>());
+      }
     }
     
     if (StartingTrendEvent)
@@ -211,7 +218,7 @@ public class Trend : MonoBehaviour
     SetCurrentHat(newHat);
     if(self != null && self.playerClass == Class.BaldMan)
     {
-      self.baldMode = false;
+      self.BaldModeOff(); //self.baldMode = false;
     }
     // display swap animation (must be done in main thread)
     AnimTriggerString = "Hat";
